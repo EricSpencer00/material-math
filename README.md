@@ -1,6 +1,6 @@
 # material math
 
-[Open the generator](https://ericspencer00.github.io/material-math/)
+[Open the generator](https://ericspencer.us/material-math/)
 
 Click **Randomize**. Everything disappears. A seeded material is generated in your browser; after it is visible alone for one second, Download SVG, Embed and Randomize appear. Escape returns to the start.
 
@@ -12,7 +12,7 @@ No backend, API keys, database, framework, external fonts or runtime dependencie
 - Image-only embed: `/embed.html?kind=copper&seed=42`
 - Prebuilt files: `/assets/basalt.svg`, `/assets/terracotta.svg`, `/assets/limestone.svg`, `/assets/copper.svg`, `/assets/torus.svg`, `/assets/torus-static.svg`
 
-Paths above are relative to the project root, `https://ericspencer00.github.io/material-math/`. The Embed button produces the full iframe snippet. The same kind and seed reproduce the same SVG. Available kinds: `basalt`, `terracotta`, `limestone`, `copper`, `torus`.
+Paths above are relative to the project root, `https://ericspencer.us/material-math/`. The Embed button produces the full iframe snippet. The same kind and seed reproduce the same SVG. Available kinds: `basalt`, `terracotta`, `limestone`, `copper`, `torus`.
 
 ## Local development
 
