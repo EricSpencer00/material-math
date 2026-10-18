@@ -1,0 +1,1 @@
+{"name":"material-math","version":"0.1.0","private":true,"type":"module","scripts":{"build":"node src/build.mjs","test":"node --test","start":"node src/serve.mjs"},"engines":{"node":">=22"}}
