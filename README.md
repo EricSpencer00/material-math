@@ -33,3 +33,7 @@ Seeded noise, displaced contours, microrelief lighting, shadows and layered mine
 See [technique and primary sources](docs/TECHNIQUE.md). Original procedural artwork, without embedded photographs or copied logos.
 
 [Eric Spencer](https://ericspencer.us/)
+
+## Lock a choice
+
+On the start screen, **don't randomize** opens material selection and three color pickers (shadows, midtones, highlights). Lock material and colors independently; Randomize still varies geometry, lighting and texture. The locks remain active for subsequent generations. Custom colors are included in share URLs, embeds and downloaded SVGs. Escape returns to these controls.

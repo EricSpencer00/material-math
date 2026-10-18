@@ -1,7 +1,11 @@
+import {recolor} from './colors.mjs';
 import {material,orbit} from './engine.mjs';
 import {kinds,selection,embedURL} from './selection.mjs';
 const $=id=>document.getElementById(id);
-let blobURL,chosen,busy=false;
+let blobURL,chosen,busy=false,configured=false;
+for(const kind of kinds){const option=document.createElement('option');option.value=kind;option.textContent=kind[0].toUpperCase()+kind.slice(1);$('material').append(option);}
+$('customize').onclick=()=>{configured=true;const open=$('settings').hidden;$('settings').hidden=!open;$('customize').setAttribute('aria-expanded',String(open));};
+const pickedColors=()=>['shadow-color','mid-color','light-color'].map(id=>$(id).value);
 const nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve));
 async function generate(preset){
  if(busy)return;busy=true;
@@ -10,8 +14,9 @@ async function generate(preset){
  await nextFrame();await nextFrame();
  try{
  const values=crypto.getRandomValues(new Uint32Array(2));
- chosen=preset??{kind:kinds[values[0]%kinds.length],seed:values[1]};
- const svg=chosen.kind==='torus'?orbit(chosen.seed,!matchMedia('(prefers-reduced-motion: reduce)').matches):material(chosen.kind,chosen.seed);
+ chosen=preset??{kind:configured&&$('lock-material').checked?$('material').value:kinds[values[0]%kinds.length],seed:values[1],...(configured&&$('lock-colors').checked?{colors:pickedColors()}:{})};
+ const raw=chosen.kind==='torus'?orbit(chosen.seed,!matchMedia('(prefers-reduced-motion: reduce)').matches):material(chosen.kind,chosen.seed);
+ const svg=recolor(raw,chosen.colors);
  const oldURL=blobURL;blobURL=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));
  $('art').src=blobURL;await $('art').decode();if(oldURL)URL.revokeObjectURL(oldURL);
  $('art').alt=`Procedural ${chosen.kind}, seed ${chosen.seed}`;$('art').hidden=false;
@@ -25,7 +30,7 @@ async function generate(preset){
 }
 $('randomize').onclick=()=>generate();$('again').onclick=()=>generate();
 $('embed').onclick=()=>{
- $('embed-code').value=`<iframe src="${embedURL(location.href,chosen.kind,chosen.seed)}" title="Material math" style="border:0;width:100%;aspect-ratio:4/3" loading="lazy"></iframe>`;
+ $('embed-code').value=`<iframe src="${embedURL(location.href,chosen.kind,chosen.seed,chosen.colors)}" title="Material math" style="border:0;width:100%;aspect-ratio:4/3" loading="lazy"></iframe>`;
  $('embed-panel').hidden=false;$('embed-code').focus();$('embed-code').select();
 };
 $('close').onclick=()=>{$('embed-panel').hidden=true;$('embed').focus();};
