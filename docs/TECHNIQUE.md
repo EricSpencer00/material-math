@@ -18,7 +18,7 @@ The metal uses a strongly directional noise frequency (`.006 .65`) and fine hori
 
 ## Mathematical animation
 
-The torus uses `x=(R+r cos v) cos u`, `y=(R+r cos v) sin u`, `z=r sin v`, followed by two rotations and orthographic projection. It exports a 144 × 64 mesh of depth-sorted quadrilaterals, with rotated surface normals, directional diffuse shading and a specular highlight. SMIL rotates the projected group over a 24-second eased loop. This is a 2D rotation of projected geometry, not a dynamic 3D camera or a physical light simulation. Static export contains no animation elements. Play/pause swaps the gallery source between animated and static companions.
+The torus uses `x=(R+r cos v) cos u`, `y=(R+r cos v) sin u`, `z=r sin v`, followed by two rotations and orthographic projection. It exports a 144 × 64 mesh of depth-sorted quadrilaterals, with rotated surface normals, directional diffuse shading and a specular highlight. SMIL rotates the projected group over a 24-second eased loop. This is a 2D rotation of projected geometry, not a dynamic 3D camera or a physical light simulation. Static export contains no animation elements. The generator emits an animated torus unless reduced motion is requested. The static prebuilt companion remains available.
 
 Avoid animating high-frequency turbulence continuously. It makes material boil and repeatedly recomputes filters. Keep the material stable and move geometry or light sparingly. A high-density SVG scene can cost more than a compressed image; vector does not imply fast.
 

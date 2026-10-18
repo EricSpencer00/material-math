@@ -1,0 +1,3 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {selection,embedURL} from './selection.mjs';
+test('shareable seeds reproduce valid selections and reject malformed inputs',()=>{assert.deepEqual(selection(new URLSearchParams('kind=basalt&seed=42')),{kind:'basalt',seed:42});for(const query of ['kind=bad&seed=3','kind=basalt&seed=-1','kind=copper&seed=','kind=torus&seed=Infinity','kind=basalt&seed=4294967296'])assert.equal(selection(new URLSearchParams(query)),null);});
+test('embed links preserve the GitHub Pages project prefix',()=>{assert.equal(embedURL('https://ericspencer00.github.io/material-math/?kind=basalt&seed=1','copper',42),'https://ericspencer00.github.io/material-math/embed.html?kind=copper&seed=42');});
