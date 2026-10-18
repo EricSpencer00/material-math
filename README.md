@@ -12,7 +12,7 @@ No backend, API keys, database, framework, external fonts or runtime dependencie
 - Image-only embed: `/embed.html?kind=copper&seed=42`
 - Prebuilt files: `/assets/basalt.svg`, `/assets/terracotta.svg`, `/assets/limestone.svg`, `/assets/copper.svg`, `/assets/torus.svg`, `/assets/torus-static.svg`
 
-Paths above are relative to the project root, `https://ericspencer.us/material-math/`. The Embed button produces the full iframe snippet. The same kind and seed reproduce the same SVG. Available kinds: `basalt`, `terracotta`, `limestone`, `copper`, `torus`.
+Paths above are relative to the project root, `https://ericspencer.us/material-math/`. The Embed button produces the full iframe snippet. The same kind and seed reproduce the same SVG. Available kinds: `basalt`, `terracotta`, `limestone`, `copper`, `torus`, `sandstone`, `slate`, `jade`, `travertine`, `bronze`, `silver`. Seeds vary lighting, grain, strata geometry and torus proportions; each kind accepts all 4,294,967,296 unsigned 32-bit seeds.
 
 ## Local development
 

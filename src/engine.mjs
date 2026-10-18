@@ -1,11 +1,21 @@
 export function random(seed=17){return()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};}
 const W=1600,H=1200;
+const palettes={
+ basalt:['#807568','#383b3c','#1d2528','#64594e'],
+ terracotta:['#ffb477','#be502f','#762b20','#d46c42'],
+ limestone:['#e5d9bd','#b8ab90','#716d63','#d4c6a9'],
+ sandstone:['#e9c79c','#c38d61','#92684b','#e3b98b'],
+ slate:['#a2afb1','#566f78','#263e4a','#8b9696'],
+ jade:['#d4d9aa','#6b957e','#234e49','#9cb39b'],
+ travertine:['#eee0c9','#c4ad8a','#9a876c','#e3d0b0']
+};
+const metals={copper:['#161f24','#544136','#bd7544','#ffe2ac','#9f5b37','#343c40','#151d23'],bronze:['#222826','#55533a','#97865c','#f3e0a1','#8c7545','#454b40','#182622'],silver:['#17232a','#485e6a','#91a9b5','#ecf3ec','#8d9fa6','#3e5059','#14212a']};
 const stop=(offset,color,opacity=1)=>`<stop offset="${offset}" stop-color="${color}" stop-opacity="${opacity}"/>`;
 function defs(seed,kind){
- const copper=kind==='copper'; const rng=random(seed); const elevation=32+rng()*24; const azimuth=205+rng()*45;
+ const copper=kind in metals; const rng=random(seed); const elevation=32+rng()*24; const azimuth=205+rng()*45;
  return `<defs>
- <linearGradient id="stone" x1="0" y1="0" x2="1" y2="1">${(kind==='terracotta'?['#ffb477','#be502f','#762b20','#d46c42']:kind==='limestone'?['#e5d9bd','#b8ab90','#716d63','#d4c6a9']:['#807568','#383b3c','#1d2528','#64594e']).map((c,i)=>stop(i/3,c)).join('')}</linearGradient>
- <linearGradient id="metal">${['#161f24','#544136','#bd7544','#ffe2ac','#9f5b37','#343c40','#151d23'].map((c,i)=>stop([0,.19,.27,.31,.39,.58,1][i],c)).join('')}</linearGradient>
+ <linearGradient id="stone" x1="0" y1="0" x2="1" y2="1">${(palettes[kind]??palettes.basalt).map((c,i)=>stop(i/3,c)).join('')}</linearGradient>
+ <linearGradient id="metal">${(metals[kind]??metals.copper).map((c,i)=>stop([0,.19,.27,.31,.39,.58,1][i],c)).join('')}</linearGradient>
  <linearGradient id="edge" x1="0" y1="0" x2="0.8" y2="1">${stop(0,'#ffe4ba',.8)}${stop(.32,'#b68866',.34)}${stop(.7,'#171b20',.7)}${stop(1,'#0d151c',.95)}</linearGradient>
  <radialGradient id="falloff" cx=".25" cy=".15" r="1">${stop(0,'#e9d2b0',0)}${stop(.5,'#10151c',.04)}${stop(1,'#080e16',.78)}</radialGradient>
  <filter id="relief" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
@@ -23,13 +33,20 @@ function defs(seed,kind){
 function wrap(name,body,seed,kind,animated=false){return `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="title desc"><title id="title">${name}</title><desc id="desc">Procedural ${kind} with seeded multiscale texture and directional relief lighting. ${animated?'Animated mathematical geometry.':'Static material study.'}</desc><style>@media(prefers-reduced-motion:reduce){.motion{display:none}}</style>${defs(seed,kind)}${body}</svg>`;}
 export function material(kind='basalt',seed=17){
  const rng=random(seed);let shapes=''; const center=1050+rng()*550, pitch=34+rng()*20, rise=-100-rng()*300;
- if(kind==='copper'){
+ if(kind in metals){
  shapes='<rect width="1600" height="1200" fill="url(#metal)"/>';
  for(let i=0;i<1900;i++){let y=rng()*1200;shapes+=`<path d="M ${rng()*100} ${y.toFixed(2)} h ${1400+rng()*200}" stroke="${rng()>.5?'#f4d5ad':'#121e26'}" stroke-width="${.12+rng()*.65}" opacity="${.015+rng()*.065}"/>`;}
  }else{
  shapes='<rect width="1600" height="1200" fill="url(#stone)"/>';
- // Nested offset ellipses are geological terraces, with actual bevel and occlusion.
- for(let i=0;i<23;i++){
+ // Vary the material's macro geometry as well as its surface noise.
+ if(['slate','sandstone','travertine'].includes(kind)){
+ const slope=(rng()-.5)*.7, layers=14+Math.floor(rng()*15),phase=rng()*6.28;
+ for(let i=0;i<layers;i++){
+ const level=-170+i*1450/layers,amp=25+rng()*90,freq=.002+rng()*.004;
+ let edge='';for(let x=-100;x<=1700;x+=30){const y=level+slope*(x-800)+amp*Math.sin(x*freq+phase)+amp*.2*Math.sin(x*.013+phase);edge+=`${x===-100?'M':'L'}${x} ${y.toFixed(2)} `;}
+ shapes+=`<path d="${edge} L1700 1500 L-100 1500Z" fill="url(#stone)" filter="url(#shadow)"/><path d="${edge}" fill="none" stroke="url(#edge)" stroke-width="${2+rng()*5}"/>`;
+ }
+ }else for(let i=0;i<23;i++){
  let rx=1640-i*pitch,ry=1200-i*(pitch*.72),cy=rise-i*4;
  shapes+=`<ellipse cx="${center}" cy="${cy+9}" rx="${rx}" ry="${ry}" fill="url(#stone)" stroke="#10191c" stroke-opacity=".5" stroke-width="14" filter="url(#shadow)"/><ellipse cx="${center}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#stone)" stroke="url(#edge)" stroke-width="5"/>`;
  }
@@ -50,8 +67,9 @@ export function torusPath(v,phase=0){
  }return points.map(([x,y],i)=>`${i?'L':'M'}${x.toFixed(2)} ${y.toFixed(2)}`).join(' ')+' Z';
 }
 export function orbit(seed=17,animated=true){
- const rotate=(x,y,z)=>{const a=.92,b=-.35,yy=y*Math.cos(a)-z*Math.sin(a),zz=y*Math.sin(a)+z*Math.cos(a);return [x*Math.cos(b)+zz*Math.sin(b),yy,-x*Math.sin(b)+zz*Math.cos(b)];};
- const point=(u,v)=>rotate((360+105*Math.cos(v))*Math.cos(u),(360+105*Math.cos(v))*Math.sin(u),105*Math.sin(v));
+ const rng=random(seed);const tilt=.55+rng()*.8,turn=-.7+rng()*.9,major=300+rng()*100,minor=65+rng()*65;
+ const rotate=(x,y,z)=>{const a=tilt,b=turn,yy=y*Math.cos(a)-z*Math.sin(a),zz=y*Math.sin(a)+z*Math.cos(a);return [x*Math.cos(b)+zz*Math.sin(b),yy,-x*Math.sin(b)+zz*Math.cos(b)];};
+ const point=(u,v)=>rotate((major+minor*Math.cos(v))*Math.cos(u),(major+minor*Math.cos(v))*Math.sin(u),minor*Math.sin(v));
  const tiles=[];const U=144,V=64;
  for(let j=0;j<U;j++)for(let i=0;i<V;i++){
  const u=j/U*Math.PI*2,v=i/V*Math.PI*2,du=Math.PI*2/U,dv=Math.PI*2/V;
