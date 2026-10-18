@@ -1,6 +1,6 @@
 import {recolor} from './colors.mjs';
 import {material,orbit} from './engine.mjs';
-import {kinds,selection,embedURL} from './selection.mjs';
+import {kinds,selection,embedURL} from './selection.mjs?v=locks1';
 const $=id=>document.getElementById(id);
 let blobURL,chosen,busy=false,configured=false;
 for(const kind of kinds){const option=document.createElement('option');option.value=kind;option.textContent=kind[0].toUpperCase()+kind.slice(1);$('material').append(option);}

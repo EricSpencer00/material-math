@@ -1,6 +1,6 @@
 import {recolor} from './colors.mjs';
 import {material,orbit} from './engine.mjs';
-import {selection} from './selection.mjs';
+import {selection} from './selection.mjs?v=locks1';
 const {kind,seed,colors}=selection(new URLSearchParams(location.search))??{kind:'basalt',seed:17};
 const raw=kind==='torus'?orbit(seed,!matchMedia('(prefers-reduced-motion: reduce)').matches):material(kind,seed);
 const svg=recolor(raw,colors);
