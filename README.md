@@ -2,12 +2,6 @@
 
 [Open the generator](https://ericspencer.us/material-math/)
 
-Click **Randomize**. Everything disappears. A seeded material is generated in your browser; after it is visible alone for one second, Download SVG, Embed and Randomize appear. Escape returns to the start.
-
-No backend, API keys, database, framework, external fonts or runtime dependencies. GitHub Pages serves ordinary HTML, CSS and JavaScript. Node is optional tooling for regenerating the prebuilt SVG files and running tests.
-
-## Direct links
-
 - Generator: `/?kind=basalt&seed=42`
 - Image-only embed: `/embed.html?kind=copper&seed=42`
 - Prebuilt files: `/assets/basalt.svg`, `/assets/terracotta.svg`, `/assets/limestone.svg`, `/assets/copper.svg`, `/assets/torus.svg`, `/assets/torus-static.svg`
